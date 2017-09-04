@@ -1,66 +1,22 @@
-var Backbone = require('backbone');
-var Marionette = require('backbone.marionette');
+var	Marionette	=	require('backbone.marionette');
+var	TodoView	=	require('./views/layout');
 var	ToDoModel	=	require('./models/todo');
 
+var	initialData	=	[
+		{assignee:	'Scott',	text:	'Write	a	book	about	Marionette'},
+		{assignee:	'Andrew',	text:	'Do	some	coding'}
+];
 
-var ToDo = Marionette.View.extend({
-  tagName: 'li',
-  template: require('./templates/todoitem.html')
-});
-
-var TodoList = Marionette.CompositeView.extend({
-  el: '#app',
-  template: require('./templates/layout.html'),
-  childView: ToDo,
-  childViewContainer: 'ul',
-
-  ui: { //	1
-    assignee: '#id_assignee',
-    form: 'form',
-    text: '#id_text'
-  },
-
-  triggers: { //	2
-    'submit	@ui.form': 'add1:todo:item0'
-  },
-
-  collectionEvents: { //	3
-    add: 'itemAdded'
-  },
-
-  modelEvents:	{
-      change:	'render'
-  },
-
-  onAdd1TodoItem0: function() { //	4
-        this.model.set({
-						assignee:	this.ui.assignee.val(),
-						text:	this.ui.text.val()
+var	app	=	new	Marionette.Application({
+		onStart:	function(app, options)	{
+      console.log(options)
+				var	todo	=	new	TodoView({
+						collection:	new	Backbone.Collection(options.initialData),
+						model:	new	ToDoModel()
 				});
-				if	(this.model.isValid())	{
-						var	items	=	this.model.pick('assignee',	'text');
-						this.collection.add(items);
-				}
-
-  },
-
-  itemAdded: function() { //	6
-    this.ui.assignee.val('');
-    this.ui.text.val('');
-  }
+				todo.render();
+				todo.triggerMethod('show');
+		}
 });
 
-var todo = new TodoList({
-  collection: new Backbone.Collection([{
-      assignee: 'Scott',
-      text: 'Write	a	book	about	Marionette'
-    },
-    {
-      assignee: 'Andrew',
-      text: 'Do	some	coding'
-    }
-  ]),
-  model:	new	ToDoModel()
-});
-
-todo.render();
+app.start({initialData:	initialData});
