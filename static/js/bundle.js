@@ -18992,8 +18992,6 @@ var	ToDo	=	Backbone.Model.extend({
 						hasError	=	true;
 				}
 				if	(hasError)	{
-          console.log(errors)
-          alert('error')
 						return	errors;
 				}
 		}
