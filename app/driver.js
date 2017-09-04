@@ -1,8 +1,21 @@
-var jQuery = require('jquery');
-var	Marionette	=	require('backbone.marionette');		//	1
-var	HelloWorld	=	Marionette.View.extend({		//	2
-		el:	'#app',		//	3
-		template:	require('./templates/layout.html')		//	4
+var	Backbone	=	require('backbone');
+var	Marionette	=	require('backbone.marionette');
+
+var	ToDo	=	Marionette.View.extend({
+		tagName:	'li',
+		template:	require('./templates/todoitem.html')
 });
-var	hello	=	new	HelloWorld();		//	5
-hello.render();		//	6
+
+var	TodoList	=	Marionette.CompositeView.extend({
+		el:	'#app',
+		template:	require('./templates/layout.html'),
+		childView:	ToDo,
+		childViewContainer:	'ul'
+});
+var	todo	=	new	TodoList({
+		collection:	new	Backbone.Collection([
+				{assignee:	'Scott',	text:	'Write	a	book	about	Marionette'},
+				{assignee:	'Andrew',	text:	'Do	some	coding'}
+		])
+});
+todo.render();
